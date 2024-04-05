@@ -38,12 +38,23 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted, watch } from "vue";
 
 const showModal = ref(false);
 const newNote = ref("");
 const errorMessage = ref("");
 const notes = ref([]);
+
+onMounted(() => {
+  savedNotes = localStorge.getItem('notes');
+  if(savedNotes) {
+    notes.value = JSON.parse(savedNotes);
+  }
+});
+
+watch(notes, (newNotes) => {
+  localStorge.setItem('notes', JSON.strinify(newNotes));
+})
 
 const getRandomLightColor = () => {
   return "hsl(" + Math.random() * 360 + ", 100%, 75%)";
