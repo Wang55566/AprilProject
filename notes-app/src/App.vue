@@ -1,16 +1,24 @@
 <template>
   <main>
-    <div class="overlay">
+    <div v-show="showModal" class="overlay">
       <div class="modal">
-        <textarea name="note" id="note" cols="30" rows="10"></textarea>
-        <button>Add Note</button>
-        <button class="close">Close</button>
+        <textarea
+          v-model="newNote"
+          name="note"
+          id="note"
+          cols="30"
+          rows="10"
+          placeholder="Add your note"
+        ></textarea>
+        {{notes}}
+        <button @click="addNote">Add Note</button>
+        <button class="close" @click="showModal = false">Close</button>
       </div>
     </div>
     <div class="container">
       <header>
         <h1>Notes</h1>
-        <button>+</button>
+        <button @click="showModal = true">+</button>
       </header>
       <div class="card-container">
         <div class="card">
@@ -25,7 +33,30 @@
   </main>
 </template>
 
-<script setup></script>
+<script setup>
+import { ref } from "vue";
+
+const showModal = ref(false);
+const newNote = ref("");
+const notes = ref([]);
+
+const getRandomLightColor = () => {
+  return "hsl(" + Math.random() * 360 + ", 100%, 75%)"
+
+}
+
+const addNote = () => {
+  notes.value.push({
+    id: Math.floor(Math.random() * 1000000),
+    text: newNote.value,
+    date: new Date(),
+    backgroundColor: getRandomLightColor()
+  })
+
+  showModal.value = false;
+  newNote.value = "";
+}
+</script>
 
 <style scoped>
 main {
