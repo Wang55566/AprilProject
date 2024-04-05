@@ -10,7 +10,6 @@
           rows="10"
           placeholder="Add your note"
         ></textarea>
-        {{notes}}
         <button @click="addNote">Add Note</button>
         <button class="close" @click="showModal = false">Close</button>
       </div>
@@ -20,13 +19,16 @@
         <h1>Notes</h1>
         <button @click="showModal = true">+</button>
       </header>
-      <div class="card-container">
-        <div class="card">
+      <div class="cards-container">
+        <div
+          class="card"
+          v-for="note in notes"
+          :style="{ backgroundColor: note.backgroundColor }"
+        >
           <p class="main-text">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates
-            illum excepturi, earum magnam iusto culpa!
+            {{ note.text }}
           </p>
-          <p class="date">04/04/2024</p>
+          <p class="date">{{ note.date.toLocaleDateString("en-US") }}</p>
         </div>
       </div>
     </div>
@@ -41,21 +43,20 @@ const newNote = ref("");
 const notes = ref([]);
 
 const getRandomLightColor = () => {
-  return "hsl(" + Math.random() * 360 + ", 100%, 75%)"
-
-}
+  return "hsl(" + Math.random() * 360 + ", 100%, 75%)";
+};
 
 const addNote = () => {
   notes.value.push({
     id: Math.floor(Math.random() * 1000000),
     text: newNote.value,
     date: new Date(),
-    backgroundColor: getRandomLightColor()
-  })
+    backgroundColor: getRandomLightColor(),
+  });
 
   showModal.value = false;
   newNote.value = "";
-}
+};
 </script>
 
 <style scoped>
@@ -93,6 +94,11 @@ header button {
   font-size: 20px;
 }
 
+.cards-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
 .card {
   width: 225px;
   height: 225px;
@@ -106,10 +112,6 @@ header button {
   margin-bottom: 20px;
 }
 
-.cards-container {
-  display: flex;
-  flex-wrap: wrap;
-}
 .overlay {
   position: absolute;
   width: 100%;
