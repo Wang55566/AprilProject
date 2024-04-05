@@ -3,13 +3,14 @@
     <div v-show="showModal" class="overlay">
       <div class="modal">
         <textarea
-          v-model="newNote"
+          v-model.trim="newNote"
           name="note"
           id="note"
           cols="30"
           rows="10"
           placeholder="Add your note"
         ></textarea>
+        <p v-if="errorMessage">{{ errorMessage }}</p>
         <button @click="addNote">Add Note</button>
         <button class="close" @click="showModal = false">Close</button>
       </div>
@@ -23,6 +24,7 @@
         <div
           class="card"
           v-for="note in notes"
+          :key="note.id"
           :style="{ backgroundColor: note.backgroundColor }"
         >
           <p class="main-text">
@@ -40,6 +42,7 @@ import { ref } from "vue";
 
 const showModal = ref(false);
 const newNote = ref("");
+const errorMessage = ref("");
 const notes = ref([]);
 
 const getRandomLightColor = () => {
@@ -47,6 +50,10 @@ const getRandomLightColor = () => {
 };
 
 const addNote = () => {
+  if (newNote.value.length < 10) {
+    return (errorMessage.value = "Note should have more than 10 characters.");
+  }
+
   notes.value.push({
     id: Math.floor(Math.random() * 1000000),
     text: newNote.value,
@@ -56,6 +63,7 @@ const addNote = () => {
 
   showModal.value = false;
   newNote.value = "";
+  errorMessage = "";
 };
 </script>
 
@@ -147,5 +155,9 @@ header button {
 .modal .close {
   background-color: red;
   margin-top: 7px;
+}
+
+.modal p {
+  color: red;
 }
 </style>
