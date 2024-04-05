@@ -1,5 +1,6 @@
 <template>
   <main>
+    <!-- Modal -->
     <div v-show="showModal" class="overlay">
       <div class="modal">
         <textarea
@@ -15,6 +16,8 @@
         <button class="close" @click="showModal = false">Close</button>
       </div>
     </div>
+
+    <!-- Notes Container -->
     <div class="container">
       <header>
         <h1>Notes</h1>
@@ -30,7 +33,8 @@
           <p class="main-text">
             {{ note.text }}
           </p>
-          <p class="date">{{ note.date.toLocaleDateString("en-US") }}</p>
+          <p class="date">{{ formatDate(note.date) }}</p>
+          <button class="btn remove-btn" @click="removeNote(note.id)">X</button>
         </div>
       </div>
     </div>
@@ -45,20 +49,26 @@ const newNote = ref("");
 const errorMessage = ref("");
 const notes = ref([]);
 
+// Load notes from localStorage on component mount
 onMounted(() => {
-  savedNotes = localStorge.getItem('notes');
-  if(savedNotes) {
+  const savedNotes = localStorage.getItem("notes");
+  if (savedNotes) {
     notes.value = JSON.parse(savedNotes);
   }
 });
 
-watch(notes, (newNotes) => {
-  localStorge.setItem('notes', JSON.strinify(newNotes));
-})
-
 const getRandomLightColor = () => {
   return "hsl(" + Math.random() * 360 + ", 100%, 75%)";
 };
+
+// Watch for changes in notes array and save to localStorage
+watch(
+  notes,
+  (newNotes) => {
+    localStorage.setItem("notes", JSON.stringify(newNotes));
+  },
+  { deep: true }
+);
 
 const addNote = () => {
   if (newNote.value.length < 10) {
@@ -68,13 +78,29 @@ const addNote = () => {
   notes.value.push({
     id: Math.floor(Math.random() * 1000000),
     text: newNote.value,
-    date: new Date(),
+    date: new Date(), // Current date
     backgroundColor: getRandomLightColor(),
   });
 
   showModal.value = false;
   newNote.value = "";
-  errorMessage = "";
+  errorMessage.value = "";
+};
+
+const formatDate = (date) => {
+  const options = {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+  hour: 'numeric',
+  minute: 'numeric',
+  second: 'numeric'
+};
+  return new Date(date).toLocaleDateString("en-US", options);
+};
+
+const removeNote = (id) => {
+  notes.value = notes.value.filter((note) => note.id !== id);
 };
 </script>
 
@@ -131,6 +157,11 @@ header button {
   margin-bottom: 20px;
 }
 
+.main-text {
+  word-wrap: break-word; /* For legacy browsers */
+  overflow-wrap: break-word; /* For modern browsers */
+}
+
 .overlay {
   position: absolute;
   width: 100%;
@@ -170,5 +201,14 @@ header button {
 
 .modal p {
   color: red;
+}
+
+.remove-btn {
+  border-radius: 15px;
+  background-color: red;
+  color: white;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
 }
 </style>
