@@ -1,23 +1,28 @@
 <template>
-  <div>
-    <main>
-      <div class="container">
-        <header>
-          <h1>Notes</h1>
-          <button>+</button>
-        </header>
-        <div class="card-container">
-          <div class="card">
-            <p class="main-text">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Voluptates illum excepturi, earum magnam iusto culpa!
-            </p>
-            <p class="date"></p>
-          </div>
+  <main>
+    <div class="overlay">
+      <div class="modal">
+        <textarea name="note" id="note" cols="30" rows="10"></textarea>
+        <button>Add Note</button>
+        <button class="close">Close</button>
+      </div>
+    </div>
+    <div class="container">
+      <header>
+        <h1>Notes</h1>
+        <button>+</button>
+      </header>
+      <div class="card-container">
+        <div class="card">
+          <p class="main-text">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates
+            illum excepturi, earum magnam iusto culpa!
+          </p>
+          <p class="date">04/04/2024</p>
         </div>
       </div>
-    </main>
-  </div>
+    </div>
+  </main>
 </template>
 
 <script setup></script>
@@ -46,7 +51,7 @@ h1 {
   font-size: 75px;
 }
 
-button {
+header button {
   border: none;
   padding: 10px;
   width: 50px;
@@ -60,7 +65,7 @@ button {
 .card {
   width: 225px;
   height: 225px;
-  background-color: rbg(237, 182, 44);
+  background-color: rgb(237, 182, 44);
   padding: 10px;
   border-radius: 15px;
   display: flex;
@@ -68,5 +73,46 @@ button {
   justify-content: space-between;
   margin-right: 20px;
   margin-bottom: 20px;
+}
+
+.cards-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+.overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.77);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal {
+  width: 750px;
+  background-color: white;
+  border-radius: 10px;
+  padding: 30px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal button {
+  padding: 10px;
+  font-size: 20px;
+  width: 100%;
+  background-color: blueviolet;
+  border: none;
+  color: white;
+  cursor: pointer;
+  margin-top: 15px;
+}
+
+.modal .close {
+  background-color: red;
+  margin-top: 7px;
 }
 </style>
