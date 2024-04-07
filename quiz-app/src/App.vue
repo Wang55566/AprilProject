@@ -2,24 +2,33 @@
   <div class="container">
     <header>
       <h1>Quizes</h1>
-      <input type="text" placeholder="Search..." />
+      <input type="text" placeholder="Search..." v-model.trim="search" />
     </header>
-    <div class="optionscontainer">
-      <div class="card">
-        <img
-          src="https://s.yimg.com/ny/api/res/1.2/MbmDmZ9Fv5hWlKH0rbkscQ--/YXBwaWQ9aGlnaGxhbmRlcjt3PTk2MDtoPTEyMTI7Y2Y9d2VicA--/https://media.zenfs.com/zh-tw/setn.com.tw/fec882a9c65f83ecdc5670e6a6513462"
-          alt=""
-        />
+    <div class="options-container">
+      <div class="card" v-for="quiz in quizes" :key="quiz.id">
+        <img :src="quiz.img" alt="" />
         <div class="card-text">
-          <h2>Math</h2>
-          <p>15 questions</p>
+          <h2>{{ quiz.name }}</h2>
+          <p>{{ quiz.questions.length }}</p>
         </div>
       </div>
     </div>
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+import q from "../data/quizes.json";
+import { ref, watch } from "vue";
+
+const quizes = ref(q);
+const search = ref("");
+
+watch(search, () => {
+  quizes.value = q.filter((quiz) =>
+    quiz.name.toLowerCase().includes(search.value.toLowerCase())
+  );
+});
+</script>
 
 <style scoped>
 .container {
@@ -65,7 +74,7 @@ header input {
 }
 
 .card img {
-  width:100%;
+  width: 100%;
   height: 190px;
   margin: 0;
 }
