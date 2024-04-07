@@ -6,7 +6,6 @@
     <div class="option" v-for="option in question.options" :key="option.id">
       <p class="option-label">{{option.label}}</p>
       <div class="option-value">
-        <p>{{option.text}}</p>
       </div>
     </div>
   </div>
